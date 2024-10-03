@@ -27,17 +27,22 @@ The raw data for this model is assumed in the following JSON format (one file pe
 ```json
 {
     "headers": [
-       {"columns" : [{"content"="<content>"},
-                 {"content"="<content>"}]},
-       ...          
+       {"columns" : [{"content" : ="<content>"},
+                 {"content" : "<content>"}]
+       },
+       {"columns" : [{"content" : ="<content>"},
+                 {"content" : "<content>"}]
+       }
     ],
-    "rows" = [
+    "rows" : [
               { 
                {"content": "<cell-content>"},
-               {"content": "<cell-content>"},
-               ...
+               {"content": "<cell-content>"}
               },
-              ...
+              { 
+               {"content": "<cell-content>"},
+               {"content": "<cell-content>"}
+              }
              ]
 }
 ```
@@ -46,8 +51,6 @@ The raw data for this model is assumed in the following JSON format (one file pe
 The data preparation is done in two stages. First training and validation intermediate files one cell content per line is generated via the script `pretrain_data_prep.py`
 
 ```bash
-source ~/table_lm__env/bin/activate
-cd $HOME/table_lm
 python pretrain_data_prep.py -i <JSON-table-files-directory> -o <training/validation-output-directory>
 
 ```
@@ -69,8 +72,6 @@ python data/table_llm_char/prepare.py -c encode -i <train-text-corpus-file> -od 
 Make sure you have a GPU with at least 16GB RAM. The script assumes that the `train.bin`, `val.bin` and `meta.pkl` files generated in the second step of data preparation are stored under `data/table_llm_char/` directory.
 
 ```
-source ~/table_lm__env/bin/activate
-cd $HOME/table_lm
 nohup python train.py config/train_table_char_llm.py &> nohup_pretrain.log &
 ```
 The pretraining takes about 8 hours on a RTX 4090 24GB GPU.
