@@ -27,10 +27,10 @@ The raw data for this model is assumed in the following JSON format (one file pe
 ```json
 {
     "headers": [
-       {"columns" : [{"content" : ="<content>"},
+       {"columns" : [{"content" : "<content>"},
                  {"content" : "<content>"}]
        },
-       {"columns" : [{"content" : ="<content>"},
+       {"columns" : [{"content" : "<content>"},
                  {"content" : "<content>"}]
        }
     ],
