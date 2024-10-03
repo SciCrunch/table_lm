@@ -48,7 +48,7 @@ The raw data for this model is assumed in the following JSON format (one file pe
 ```
 
 
-The data preparation is done in two stages. First training and validation intermediate files one cell content per line is generated via the script `pretrain_data_prep.py`
+The data preparation is done in two stages. First, training and validation intermediate files (one cell content per line) is generated via the script `pretrain_data_prep.py`
 
 ```bash
 python pretrain_data_prep.py -i <JSON-table-files-directory> -o <training/validation-output-directory>
