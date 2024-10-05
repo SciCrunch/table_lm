@@ -595,20 +595,5 @@ def cli():
         prep_pred_instances_4dir(in_root, output_dir)
 
 
-def test_driver():
-    data_root = Path(HOME, "data/table_content_extract/rrid_tables_pmc_oai_202406")
-    print(tokenize("This is a test."))
-    cf = ColumnConfig(0, 40)
-    print(cf.to_overflowed_rows("Mouse monoclonal anti-GFP (clones 7.1 and 13.1)"))
-    _ti_list = load_tables(data_root, max_tables=1000)
-    print(f"loaded {len(_ti_list)} tables.")
-    # _ts_list = calc_stats(_ti_list)
-    # tr_instances = do_prep_instances(_ti_list, _ts_list)
-    # print(f"created {len(tr_instances)} instances.")
-    # save_instances(tr_instances, "/tmp/cell_merge_instances.json")
-    prep_tr_test_instances(_ti_list, Path("/tmp/cell_merge"))
-
-
 if __name__ == '__main__':
-    # test_driver()
     cli()

@@ -27,21 +27,21 @@ The raw data for this model is assumed in the following JSON format (one file pe
 ```json
 {
     "headers": [
-       {"columns" : [{"content" : "<content>"},
-                 {"content" : "<content>"}]
+       {"columns" : [{"content" : "<content>", "colspan" : 1},
+                 {"content" : "<content>", "colspan" : 1}]
        },
-       {"columns" : [{"content" : "<content>"},
-                 {"content" : "<content>"}]
+       {"columns" : [{"content" : "<content>", "colspan" : 1},
+                 {"content" : "<content>", "colspan" : 1}]
        }
     ],
     "rows" : [
               { 
-               {"content": "<cell-content>"},
-               {"content": "<cell-content>"}
+               {"content": "<cell-content>", "colspan" : 1},
+               {"content": "<cell-content>", "colspan" : 1}
               },
               { 
-               {"content": "<cell-content>"},
-               {"content": "<cell-content>"}
+               {"content": "<cell-content>", "colspan" : 1},
+               {"content": "<cell-content>", "colspan" : 1}
               }
              ]
 }
@@ -75,6 +75,31 @@ Make sure you have a GPU with at least 16GB RAM. The script assumes that the `tr
 nohup python train.py config/train_table_char_llm.py &> nohup_pretrain.log &
 ```
 The pretraining takes about 8 hours on a RTX 4090 24GB GPU.
+
+
+## Row Merge Classifier Data Preparation
+
+Data preparation for synthetic training data generation for the row merge classifier is done via the script `merge_model_data_prep.py`.
+
+```bash
+python merge_model_data_prep.py -c prep -i <table-json-files-dir> -o <output-dir>
+
+```
+
+Here the tables for training are represented in the same JSON format as the Table LM pretraining. 
+
+After that, you can use the `merge_model_train.py` script to train/validate the
+row merge classifier via transfer learning from the pretrained Table LM.
+
+```bash
+python merge_model_train.py -p <table-lm-checkpoint-file> -v <vocabulary-meta-file> -d <data-dir> -o <model-output-dir>
+
+```
+Here `<data-dir>` is the same as the `<output-dir>` as in the previous data
+preparation step.
+
+
+
 
 
 

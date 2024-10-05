@@ -1,5 +1,6 @@
 import os
 import json
+import argparse
 import numpy as np
 import torch
 import torch.optim as optim
@@ -105,7 +106,35 @@ def load_instances(json_path: Path):
         return data['instances']
 
 
-if __name__ == '__main__':
+def cli():
+    parser = argparse.ArgumentParser(description="training row merging model")
+    parser.add_argument("-d", metavar="<data-dir>", required=True)
+    parser.add_argument("-p", metavar="<table-lm-checkpoint-file>", required=True)
+    parser.add_argument("-v", metavar="<vocabulary-meta-file>", required=True)
+    parser.add_argument("-o", metavar="<model-output-dir>", required=True)
+    args = parser.parse_args()
+    llm_cpkt_path = args.p
+    data_dir = args.d
+    meta_path = args.v
+    model_out_path = args.o
+    vocabulary = Vocabulary(Path(meta_path))
+    print(f"vocab size: {vocabulary.vocab_size}")
+    tr_instances = load_instances(data_dir / "cell_merge_tr_instances.json")
+    tr_dataset = CellMergeDataset(tr_instances, vocabulary)
+    print(f"training dataset size:{len(tr_dataset)}")
+    tr_instances = None
+    tst_instances = load_instances(data_dir / "cell_merge_test_instances.json")
+    tst_dataset = CellMergeDataset(tst_instances, vocabulary)
+    tst_instances = None
+    print(f"test dataset size:{len(tst_dataset)}")
+    _device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    cm_model = create_model(llm_cpkt_path, vocabulary, _device)
+    model_out_path.parent.mkdir(parents=True, exist_ok=True)
+    train_test(cm_model, tr_dataset, tst_dataset, _device, model_out_path)
+
+
+
+def test_driver():
     HOME = os.path.expanduser('~')
     meta_path = "data/table_llm_char/meta.pkl"
     vocabulary = Vocabulary(Path(meta_path))
@@ -126,3 +155,8 @@ if __name__ == '__main__':
     model_out_path = Path(HOME, "models/tc_merge/model.pth")
     model_out_path.parent.mkdir(parents=True, exist_ok=True)
     train_test(cm_model, tr_dataset, tst_dataset, _device, model_out_path)
+
+
+
+if __name__ == '__main__':
+    cli()
